@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>恋爱人格图鉴</title>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1499,7 +1500,7 @@ function showResult() {
         <div class="radar-wrap"><canvas id="radarCanvas"></canvas></div>
         <div class="share-footer">
           <div class="share-footer-brand">恋爱人格图鉴<br><span style="font-size:10px;opacity:0.7">扫码测测你的恋爱人格</span></div>
-          <div class="share-footer-qr">扫码<br>测试</div>
+          <canvas id="qrCanvas" style="width:52px;height:52px;border-radius:6px;"></canvas>
         </div>
       </div>
     </div>
@@ -1590,7 +1591,7 @@ function showResult() {
           <div class="unlock-list-item">3条专属恋爱建议</div>
           <div class="unlock-list-item">沟通风格指南</div>
         </div>
-        <button class="unlock-btn" onclick="openPay()">输入解锁码 · 查看完整报告</button>
+        <button class="unlock-btn" onclick="openPay()">解锁完整报告 ¥1.99</button>
         <div class="unlock-count">已有 12,386 人解锁</div>
       </div>
     </div>
@@ -1631,6 +1632,29 @@ function showResult() {
   showScreen('resultScreen');
   // Draw radar after DOM insert
   setTimeout(() => drawRadar('radarCanvas', scores), 100);
+  // Draw QR code
+  setTimeout(() => {
+    const qr = qrcode(0, 'M');
+    qr.addData(shareLink);
+    qr.make();
+    const canvas = document.getElementById('qrCanvas');
+    if (!canvas) return;
+    const mods = qr.getModuleCount();
+    const size = mods * 4;
+    canvas.width = size; canvas.height = size;
+    canvas.style.width = '52px'; canvas.style.height = '52px';
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    for (let r = 0; r < mods; r++) {
+      for (let c = 0; c < mods; c++) {
+        if (qr.isDark(r, c)) {
+          ctx.fillStyle = '#333333';
+          ctx.fillRect(c*4, r*4, 4, 4);
+        }
+      }
+    }
+  }, 150);
 }
 
 // ===== Share =====
@@ -1643,9 +1667,31 @@ const captions = {
 };
 
 function shareResult() {
-  document.getElementById('shareImgTip').classList.remove('show');
-  document.getElementById('shareCaptionArea').classList.remove('show');
-  document.getElementById('shareSheet').classList.add('show');
+  const card = document.getElementById('shareCard');
+  if (!card || typeof html2canvas === 'undefined') {
+    showToast('生成中，请稍后再试');
+    return;
+  }
+  showToast('正在生成分享图...');
+  html2canvas(card, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: null
+  }).then(canvas => {
+    // Try direct download
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = '恋爱人格图鉴.png';
+    link.href = dataUrl;
+    link.click();
+    showToast('图片已保存，去分享吧！');
+    // Also show share sheet with caption options
+    setTimeout(() => {
+      document.getElementById('shareSheet').classList.add('show');
+      document.getElementById('shareImgTip').classList.remove('show');
+      document.getElementById('shareCaptionArea').classList.remove('show');
+    }, 500);
+  });
 }
 
 function closeShare() {
@@ -1653,28 +1699,11 @@ function closeShare() {
 }
 
 function shareTo(platform) {
-  // Show caption
   const caption = captions[platform]();
   document.getElementById('shareCaptionText').textContent = caption;
   const labelMap = { wechat: '微信文案', red: '小红书文案', douyin: '抖音文案', xianyu: '闲鱼文案' };
   document.getElementById('shareCaptionLabel').textContent = labelMap[platform];
   document.getElementById('shareCaptionArea').classList.add('show');
-
-  // Generate share image
-  const card = document.getElementById('shareCard');
-  if (card && typeof html2canvas !== 'undefined') {
-    document.getElementById('shareImgTip').classList.remove('show');
-    html2canvas(card, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: null,
-      borderRadius: 24
-    }).then(canvas => {
-      const img = document.getElementById('shareImgPreview');
-      img.src = canvas.toDataURL('image/png');
-      document.getElementById('shareImgTip').classList.add('show');
-    });
-  }
 }
 
 function copyCaption() {
@@ -1693,65 +1722,17 @@ function copyCaption() {
   });
 }
 
-// ===== Unlock Code System =====
-// Code format: LV + 6 digits, valid when (d1*7 + d2*3 + d3*5 + d4*2 + d5*8 + d6*4) % 10 === 7
-function validateCode(code) {
-  if (!/^LV\d{6}$/.test(code)) return false;
-  const ds = code.slice(2).split('').map(Number);
-  const weights = [7, 3, 5, 2, 8, 4];
-  const sum = ds.reduce((s, d, i) => s + d * weights[i], 0);
-  return sum % 10 === 7;
-}
-
+// ===== Payment =====
 function openPay() {
-  document.getElementById('qrPayView').style.display = '';
-  document.getElementById('codeInputView').style.display = 'none';
   document.getElementById('payModal').classList.add('show');
 }
 function closePay() {
   document.getElementById('payModal').classList.remove('show');
 }
-function showCodeInput() {
-  document.getElementById('qrPayView').style.display = 'none';
-  document.getElementById('codeInputView').style.display = '';
-  document.getElementById('codeInput').value = '';
-  document.getElementById('codeError').textContent = '';
-  setTimeout(() => document.getElementById('codeInput').focus(), 200);
-}
-function showQrPay() {
-  document.getElementById('qrPayView').style.display = '';
-  document.getElementById('codeInputView').style.display = 'none';
-}
 function confirmPaid() {
   closePay();
   showToast('解锁成功！');
   localStorage.setItem('lv_unlocked', '1');
-  unlockReport();
-}
-function submitCode() {
-  const code = document.getElementById('codeInput').value.trim().toUpperCase();
-  if (!code) {
-    document.getElementById('codeError').textContent = '请输入解锁码';
-    return;
-  }
-  if (!validateCode(code)) {
-    document.getElementById('codeError').textContent = '解锁码无效，请检查后重试';
-    document.getElementById('codeInput').style.borderColor = '#ef4444';
-    setTimeout(() => { document.getElementById('codeInput').style.borderColor = '#e5e7eb'; }, 1500);
-    return;
-  }
-  // Check if code already used (localStorage)
-  const usedCodes = JSON.parse(localStorage.getItem('lv_used_codes') || '[]');
-  if (usedCodes.includes(code)) {
-    document.getElementById('codeError').textContent = '该解锁码已被使用';
-    return;
-  }
-  // Mark as used
-  usedCodes.push(code);
-  localStorage.setItem('lv_used_codes', JSON.stringify(usedCodes));
-
-  closePay();
-  showToast('解锁成功！');
   unlockReport();
 }
 
