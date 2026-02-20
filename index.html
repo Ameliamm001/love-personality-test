@@ -1114,38 +1114,6 @@ body {
   </div>
 </div>
 
-<!-- Payment Modal: QR Code + Amount Verify -->
-<div class="pay-modal" id="payModal">
-  <div class="pay-modal-box" id="payModalContent">
-    <!-- Step 1: Show QR + random amount -->
-    <div id="payStep1">
-      <div style="font-size:13px;color:#9ca3af;margin-bottom:6px;">微信扫码支付</div>
-      <img src="pay-qr.jpg" style="width:180px;height:180px;border-radius:12px;object-fit:cover;margin-bottom:8px;">
-      <div style="font-size:12px;color:#ef4444;font-weight:600;margin-bottom:4px;">请支付精确金额</div>
-      <div style="font-size:28px;font-weight:900;color:#1f2937;margin-bottom:4px;" id="payAmountDisplay">¥0.00</div>
-      <div style="font-size:11px;color:#9ca3af;margin-bottom:14px;">金额精确到分，用于自动验证支付</div>
-      <button class="pay-modal-btn pay-modal-confirm" onclick="goVerify()">已支付，去验证</button>
-      <button class="pay-modal-btn pay-modal-cancel" onclick="closePay()">稍后再说</button>
-    </div>
-    <!-- Step 2: Enter amount to verify -->
-    <div id="payStep2" style="display:none;">
-      <div style="font-size:36px;margin-bottom:8px;">🔐</div>
-      <div style="font-size:16px;font-weight:700;margin-bottom:4px;">支付验证</div>
-      <div style="font-size:13px;color:#9ca3af;margin-bottom:16px;">请输入你实际支付的金额（精确到分）</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:6px;">
-        <span style="font-size:20px;font-weight:700;color:#374151;">¥</span>
-        <input type="text" id="verifyAmountInput" inputmode="decimal" placeholder="0.00" style="
-          width:120px; height:48px; border:2px solid #e5e7eb; border-radius:14px;
-          padding:0 12px; font-size:22px; font-weight:700; text-align:center;
-          outline:none; transition: border-color 0.3s;
-        " onfocus="this.style.borderColor='#a855f7'" onblur="this.style.borderColor='#e5e7eb'">
-      </div>
-      <div id="verifyError" style="font-size:12px;color:#ef4444;height:24px;line-height:24px;"></div>
-      <button class="pay-modal-btn pay-modal-confirm" onclick="verifyAmount()">确认验证</button>
-      <button class="pay-modal-btn pay-modal-cancel" onclick="backToQr()">返回扫码</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ===== Radar Chart =====
@@ -1568,68 +1536,17 @@ function showResult() {
       </div>
     </div>
 
-    <!-- ===== PAID SECTION ===== -->
-    <div class="paid-section" id="paidSection">
-      <div class="paid-header">
-        <h3>深度恋爱报告</h3>
-        <p>解锁专属于你的完整恋爱分析与建议</p>
-      </div>
-
-      <!-- Preview: strengths (partially visible) -->
-      <div class="locked-card is-locked">
-        <div class="brief-card-title">💪 恋爱优势</div>
-        <div class="locked-content">
-          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[0]}</span></div>
-          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[1]}</span></div>
-          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[2]}</span></div>
-        </div>
-        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
-      </div>
-
-      <!-- Preview: blind spots -->
-      <div class="locked-card is-locked">
-        <div class="brief-card-title">⚠️ 恋爱盲区</div>
-        <div class="locked-content">
-          <div class="report-item"><span class="report-item-icon">💡</span><span class="report-item-text">${t.blindSpots[0]}</span></div>
-          <div class="report-item"><span class="report-item-icon">💡</span><span class="report-item-text">${t.blindSpots[1]}</span></div>
-        </div>
-        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
-      </div>
-
-      <!-- Preview: compatibility -->
-      <div class="locked-card is-locked">
-        <div class="brief-card-title">🔗 全类型匹配度</div>
-        <div class="locked-content">
-          ${Object.entries(types).map(([k, v]) => `
-            <div class="compat-row">
-              <span class="compat-name">${v.icon} ${v.name.replace('恋人','')}</span>
-              <div class="compat-bar-bg"><div class="compat-bar" style="width:0%;background:${compatColors[k]}"></div></div>
-              <span class="compat-pct" style="color:${compatColors[k]}">??%</span>
-            </div>
-          `).join('')}
-        </div>
-        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
-      </div>
-
-      <!-- Unlock CTA -->
-      <div class="unlock-cta" id="unlockCta">
-        <div class="unlock-limited">限时特惠</div>
-        <div class="unlock-price-row">
-          <span class="unlock-price">¥1.99</span>
-          <span class="unlock-price-orig">¥9.90</span>
-        </div>
-        <div class="unlock-list">
-          <div class="unlock-list-item">恋爱优势 & 恋爱盲区解析</div>
-          <div class="unlock-list-item">与6种人格的匹配度</div>
-          <div class="unlock-list-item">3条专属恋爱建议</div>
-          <div class="unlock-list-item">你的恋爱超能力</div>
-          <div class="unlock-list-item">TA眼中的你</div>
-          <div class="unlock-list-item">宇宙写给你的恋爱信</div>
-          <div class="unlock-list-item">写给未来伴侣的话</div>
-        </div>
-        <button class="unlock-btn" onclick="openPay()">解锁完整报告 ¥1.99</button>
-        <div class="unlock-count">已有 12,386 人解锁</div>
-      </div>
+    <!-- ===== 阅读更多 ===== -->
+    <div id="readMoreSection" style="text-align:center;padding:20px 0 8px;">
+      <div style="font-size:14px;color:#9ca3af;margin-bottom:12px;">还有更多深度分析等你发现</div>
+      <button onclick="expandReport()" style="
+        display:inline-flex;align-items:center;gap:6px;
+        padding:12px 32px;border:none;border-radius:50px;
+        background:linear-gradient(135deg,#ec4899,#a855f7);
+        color:#fff;font-size:15px;font-weight:700;
+        box-shadow:0 4px 20px rgba(168,85,247,0.3);
+        cursor:pointer;letter-spacing:0.5px;
+      ">📖 阅读更多</button>
     </div>
 
     <!-- ===== UNLOCKED REPORT (hidden by default) ===== -->
@@ -1681,6 +1598,19 @@ function showResult() {
         <div class="report-card-title">💌 写给未来伴侣的话</div>
         <div style="font-size:13px;line-height:2;color:#4b5563;white-space:pre-line;padding:8px 14px;background:linear-gradient(135deg,rgba(236,72,153,0.04),rgba(168,85,247,0.04));border-radius:14px;">${t.toFuturePartner}</div>
       </div>
+    </div>
+
+    <!-- 保存长图按钮 -->
+    <div style="text-align:center;padding:24px 0 40px;">
+      <button onclick="saveLongImage()" style="
+        display:inline-flex;align-items:center;gap:8px;
+        padding:14px 36px;border:none;border-radius:50px;
+        background:linear-gradient(135deg,#ec4899,#a855f7);
+        color:#fff;font-size:15px;font-weight:700;
+        box-shadow:0 4px 20px rgba(168,85,247,0.35);
+        cursor:pointer;letter-spacing:0.5px;
+      ">📷 保存图片</button>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px;">长按或点击保存完整结果图</div>
     </div>
   `;
 
@@ -1750,6 +1680,40 @@ function shareResult() {
   });
 }
 
+// ===== Save Long Image =====
+function saveLongImage() {
+  const el = document.getElementById('resultScreen');
+  if (!el || typeof html2canvas === 'undefined') {
+    showToast('正在加载，请稍后再试');
+    return;
+  }
+  showToast('正在生成长图，请稍候...');
+  // Temporarily hide the save button itself so it doesn't appear in the screenshot
+  const saveBtn = el.querySelector('[onclick="saveLongImage()"]');
+  const saveBtnParent = saveBtn ? saveBtn.parentElement : null;
+  if (saveBtnParent) saveBtnParent.style.display = 'none';
+
+  html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#fdf2f8',
+    scrollY: -window.scrollY,
+    windowWidth: el.scrollWidth,
+    windowHeight: el.scrollHeight
+  }).then(canvas => {
+    if (saveBtnParent) saveBtnParent.style.display = '';
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = '恋爱人格图鉴-完整报告.png';
+    link.href = dataUrl;
+    link.click();
+    showToast('长图已保存！');
+  }).catch(() => {
+    if (saveBtnParent) saveBtnParent.style.display = '';
+    showToast('保存失败，请重试');
+  });
+}
+
 function closeShare() {
   document.getElementById('shareSheet').classList.remove('show');
 }
@@ -1778,60 +1742,9 @@ function copyCaption() {
   });
 }
 
-// ===== Payment with Amount Verification =====
-let payAmount = 0;
-
-function generatePayAmount() {
-  // Random amount between 1.91 and 2.09
-  const cents = Math.floor(Math.random() * 19) + 91; // 91-109
-  if (cents >= 100) return (cents / 100 + 1).toFixed(2); // 2.00-2.09
-  return (cents / 100 + 1).toFixed(2); // 1.91-1.99
-}
-
-function openPay() {
-  payAmount = generatePayAmount();
-  document.getElementById('payAmountDisplay').textContent = '¥' + payAmount;
-  document.getElementById('payStep1').style.display = '';
-  document.getElementById('payStep2').style.display = 'none';
-  document.getElementById('payModal').classList.add('show');
-}
-function closePay() {
-  document.getElementById('payModal').classList.remove('show');
-}
-function goVerify() {
-  document.getElementById('payStep1').style.display = 'none';
-  document.getElementById('payStep2').style.display = '';
-  document.getElementById('verifyAmountInput').value = '';
-  document.getElementById('verifyError').textContent = '';
-  setTimeout(() => document.getElementById('verifyAmountInput').focus(), 200);
-}
-function backToQr() {
-  document.getElementById('payStep1').style.display = '';
-  document.getElementById('payStep2').style.display = 'none';
-}
-function verifyAmount() {
-  const input = document.getElementById('verifyAmountInput').value.trim();
-  if (!input) {
-    document.getElementById('verifyError').textContent = '请输入支付金额';
-    return;
-  }
-  const entered = parseFloat(input).toFixed(2);
-  if (entered === payAmount) {
-    closePay();
-    showToast('验证通过，报告已解锁！');
-    localStorage.setItem('lv_unlocked', '1');
-    unlockReport();
-  } else {
-    document.getElementById('verifyError').textContent = '金额不正确，请核对支付记录后重试';
-    document.getElementById('verifyAmountInput').style.borderColor = '#ef4444';
-    setTimeout(() => {
-      document.getElementById('verifyAmountInput').style.borderColor = '#e5e7eb';
-    }, 1500);
-  }
-}
-
-function unlockReport() {
-  document.getElementById('paidSection').style.display = 'none';
+// ===== 阅读更多 =====
+function expandReport() {
+  document.getElementById('readMoreSection').style.display = 'none';
   const report = document.getElementById('reportUnlocked');
   report.classList.add('show');
   setTimeout(() => {
