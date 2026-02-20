@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>恋爱人格图鉴</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 30%, #f0e6ff 70%, #ede9fe 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  color: #374151;
+  overflow-x: hidden;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ========== Screens ========== */
+.screen {
+  display: none;
+  padding: 40px 24px;
+  animation: fadeIn 0.5s ease;
+}
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ========== Start Screen ========== */
+.start-screen {
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.start-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f472b6, #a78bfa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  margin-bottom: 32px;
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 12px 40px rgba(244, 114, 182, 0.3);
+}
+
+.start-screen h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.start-screen .subtitle {
+  font-size: 15px;
+  color: #9ca3af;
+  line-height: 1.8;
+  margin-bottom: 40px;
+}
+
+.start-btn {
+  width: 220px;
+  height: 54px;
+  border: none;
+  border-radius: 27px;
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+  transition: all 0.3s;
+  letter-spacing: 2px;
+}
+.start-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+.start-footer {
+  margin-top: 48px;
+  font-size: 12px;
+  color: #d1d5db;
+}
+
+/* ========== Quiz Screen ========== */
+.quiz-screen {
+  min-height: 100vh;
+  padding-top: 24px;
+}
+
+.progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 3px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ec4899, #a855f7);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: right;
+  margin-bottom: 32px;
+}
+
+.question-container {
+  animation: fadeIn 0.4s ease;
+}
+
+.question-num {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a855f7;
+  margin-bottom: 8px;
+}
+
+.question-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid rgba(168, 85, 247, 0.15);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  font-size: 15px;
+  color: #374151;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s;
+  line-height: 1.5;
+}
+.option-btn:active {
+  transform: scale(0.98);
+}
+.option-btn.selected {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(168,85,247,0.1));
+  color: #7c3aed;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
+}
+
+/* ========== Loading Screen ========== */
+.loading-screen {
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.loading-heart {
+  font-size: 64px;
+  animation: pulse 1s ease-in-out infinite;
+  margin-bottom: 24px;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.8;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(3) infinite;
+}
+@keyframes dots {
+  0% { content: ''; }
+  33% { content: '.'; }
+  66% { content: '..'; }
+  100% { content: '...'; }
+}
+
+/* ========== Result Screen ========== */
+.result-screen {
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 40px;
+}
+
+.result-card {
+  width: 100%;
+  border-radius: 24px;
+  padding: 36px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.result-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 8px;
+  letter-spacing: 3px;
+}
+
+.result-percentage {
+  font-size: 72px;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+  margin-bottom: 4px;
+  animation: countUp 0.8s ease-out;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.result-percentage-sign {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.result-type-icon {
+  font-size: 48px;
+  margin: 16px 0 8px;
+  animation: scaleIn 0.6s ease 0.3s both;
+}
+
+.result-type-name {
+  font-size: 26px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+  animation: slideUp 0.5s ease 0.4s both;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  animation: slideUp 0.5s ease 0.5s both;
+}
+
+.result-tag {
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.trait-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 0;
+  animation: slideUp 0.5s ease 0.6s both;
+}
+
+.trait-tag {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.9);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Description card */
+.desc-card {
+  width: 100%;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 20px;
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+  animation: slideUp 0.5s ease 0.7s both;
+}
+
+.desc-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desc-card p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #4b5563;
+}
+
+/* Match info */
+.match-card {
+  width: 100%;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 12px;
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+  animation: slideUp 0.5s ease 0.8s both;
+}
+
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+.match-row + .match-row {
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+.match-emoji { font-size: 22px; }
+.match-label { font-size: 13px; color: #9ca3af; min-width: 64px; }
+.match-value { font-size: 14px; font-weight: 600; color: #374151; }
+
+/* Buttons */
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  width: 100%;
+  animation: slideUp 0.5s ease 0.9s both;
+}
+
+.btn-retry, .btn-share {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-retry {
+  background: rgba(255,255,255,0.8);
+  color: #6b7280;
+  border: 1.5px solid #e5e7eb;
+}
+.btn-retry:active { transform: scale(0.96); }
+
+.btn-share {
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
+}
+.btn-share:active { transform: scale(0.96); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 100;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Color themes for result types */
+.theme-healing { background: linear-gradient(135deg, #fbbf24, #f59e0b, #f97316); }
+.theme-adventure { background: linear-gradient(135deg, #f97316, #ef4444, #ec4899); }
+.theme-rational { background: linear-gradient(135deg, #06b6d4, #3b82f6, #6366f1); }
+.theme-romantic { background: linear-gradient(135deg, #ec4899, #a855f7, #8b5cf6); }
+.theme-guardian { background: linear-gradient(135deg, #10b981, #059669, #0d9488); }
+.theme-soulmate { background: linear-gradient(135deg, #6366f1, #4f46e5, #7c3aed); }
+
+/* ========== Share Card ========== */
+.share-card {
+  width: 100%;
+  border-radius: 24px;
+  padding: 32px 20px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+.share-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25) 0%, transparent 60%);
+  pointer-events: none;
+}
+.share-card-inner { position: relative; z-index: 1; }
+.share-rank {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.share-pct {
+  font-size: 64px;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+  animation: countUp 0.8s ease-out;
+}
+.share-pct-sign { font-size: 32px; }
+.share-type-icon { font-size: 40px; margin: 10px 0 4px; }
+.share-type-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 6px;
+}
+.share-quote {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  font-style: italic;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.share-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.share-tag {
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  font-size: 12px;
+}
+
+/* Radar chart area */
+.radar-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+.radar-wrap canvas { max-width: 280px; max-height: 280px; }
+
+/* Share card footer */
+.share-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 14px;
+  margin-top: 4px;
+}
+.share-footer-brand {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  text-align: left;
+  line-height: 1.5;
+}
+.share-footer-qr {
+  width: 52px; height: 52px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #666;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Share CTA strip */
+.share-cta {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  animation: slideUp 0.4s ease 0.5s both;
+}
+.share-cta-text {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+.share-cta-btns {
+  display: flex;
+  gap: 10px;
+}
+.share-cta-btns button {
+  flex: 1;
+  height: 42px;
+  border-radius: 21px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.share-cta-btns button:active { transform: scale(0.96); }
+.btn-save {
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+  box-shadow: 0 4px 15px rgba(236,72,153,0.3);
+}
+.btn-retest {
+  background: white;
+  color: #6b7280;
+  border: 1.5px solid #e5e7eb !important;
+}
+
+/* ========== Free Brief Section ========== */
+.brief-section {
+  width: 100%;
+  margin-top: 16px;
+  animation: slideUp 0.5s ease 0.6s both;
+}
+.brief-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+}
+.brief-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.brief-card p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #4b5563;
+}
+.brief-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.brief-row + .brief-row { border-top: 1px solid rgba(0,0,0,0.05); }
+.brief-row .be { font-size: 20px; }
+.brief-row .bl { font-size: 12px; color: #9ca3af; min-width: 56px; }
+.brief-row .bv { font-size: 13px; font-weight: 600; color: #374151; flex: 1; }
+
+/* ========== Paid Report Section ========== */
+.paid-section {
+  width: 100%;
+  margin-top: 20px;
+  animation: slideUp 0.5s ease 0.8s both;
+}
+.paid-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.paid-header h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+.paid-header p {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* Locked preview cards */
+.locked-card {
+  position: relative;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+.locked-card.is-locked .locked-content {
+  max-height: 80px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 20%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 20%, transparent 100%);
+}
+.locked-card.is-locked .lock-overlay {
+  display: flex;
+}
+.lock-overlay {
+  display: none;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 70px;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 14px;
+}
+.lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(139,92,246,0.1);
+  color: #7c3aed;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Unlock CTA */
+.unlock-cta {
+  width: 100%;
+  border-radius: 20px;
+  padding: 24px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #fdf2f8, #f0e6ff);
+  border: 2px dashed rgba(168,85,247,0.25);
+  margin-bottom: 12px;
+}
+.unlock-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.unlock-price {
+  font-size: 32px;
+  font-weight: 900;
+  color: #7c3aed;
+}
+.unlock-price-orig {
+  font-size: 14px;
+  color: #d1d5db;
+  text-decoration: line-through;
+}
+.unlock-limited {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.unlock-list {
+  text-align: left;
+  margin: 12px auto;
+  max-width: 260px;
+}
+.unlock-list-item {
+  font-size: 13px;
+  color: #4b5563;
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.unlock-list-item::before {
+  content: '✓';
+  color: #a855f7;
+  font-weight: 700;
+  font-size: 12px;
+}
+.unlock-btn {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(168,85,247,0.35);
+  margin-top: 16px;
+  transition: all 0.3s;
+  letter-spacing: 1px;
+}
+.unlock-btn:active { transform: scale(0.97); }
+.unlock-count {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 10px;
+}
+
+/* ========== Unlocked Report ========== */
+.report-unlocked { display: none; width: 100%; }
+.report-unlocked.show { display: block; }
+.report-card {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+  animation: slideUp 0.4s ease both;
+}
+.report-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.report-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #4b5563;
+}
+.report-item + .report-item { border-top: 1px solid rgba(0,0,0,0.04); }
+.report-item-icon { font-size: 16px; flex-shrink: 0; padding-top: 2px; }
+.report-item-text { flex: 1; }
+
+/* Compatibility bars */
+.compat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+}
+.compat-row + .compat-row { border-top: 1px solid rgba(0,0,0,0.04); }
+.compat-name {
+  font-size: 12px;
+  color: #6b7280;
+  min-width: 72px;
+  white-space: nowrap;
+}
+.compat-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.compat-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.compat-pct {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Report advice highlight */
+.advice-box {
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(236,72,153,0.06), rgba(168,85,247,0.06));
+  margin-bottom: 8px;
+}
+.advice-box:last-child { margin-bottom: 0; }
+.advice-box-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-bottom: 6px;
+}
+.advice-box-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #4b5563;
+}
+
+/* Payment modal */
+.pay-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+.pay-modal.show { display: flex; }
+.pay-modal-box {
+  width: 300px;
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  animation: scaleIn 0.3s ease;
+}
+.pay-modal-icon { font-size: 48px; margin-bottom: 12px; }
+.pay-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.pay-modal-desc { font-size: 13px; color: #9ca3af; margin-bottom: 20px; }
+.pay-modal-btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+.pay-modal-btn:active { transform: scale(0.97); }
+.pay-modal-confirm {
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  color: white;
+}
+.pay-modal-cancel {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Start Screen -->
+  <div class="screen start-screen active" id="startScreen">
+    <div class="start-icon">💕</div>
+    <h1>恋爱人格图鉴</h1>
+    <div class="subtitle">
+      每个人心中都藏着一种独特的爱的方式<br>
+      8道题，解锁你的恋爱人格密码<br>
+      发现你在爱情中真实的样子
+    </div>
+    <button class="start-btn" onclick="startQuiz()">开始测试</button>
+    <div class="start-footer">已有 26,847 人完成测试</div>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div class="screen quiz-screen" id="quizScreen">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText"></div>
+    <div class="question-container" id="questionContainer"></div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div class="screen loading-screen" id="loadingScreen">
+    <div class="loading-heart">💗</div>
+    <div class="loading-text">
+      正在分析你的恋爱人格<span class="loading-dots"></span><br>
+      <span style="font-size:13px; color:#d1d5db; margin-top:8px; display:inline-block;">AI 深度解读中</span>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="screen result-screen" id="resultScreen"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Unlock Code Modal -->
+<div class="pay-modal" id="payModal">
+  <div class="pay-modal-box">
+    <div class="pay-modal-icon">🔓</div>
+    <div class="pay-modal-title">输入解锁码</div>
+    <div class="pay-modal-desc">购买后获得的解锁码请输入下方</div>
+    <input type="text" id="codeInput" placeholder="请输入解锁码" style="
+      width:100%; height:48px; border:2px solid #e5e7eb; border-radius:14px;
+      padding:0 16px; font-size:16px; text-align:center; letter-spacing:2px;
+      outline:none; margin-bottom:6px; transition: border-color 0.3s;
+    " oninput="this.value=this.value.toUpperCase()" onfocus="this.style.borderColor='#a855f7'" onblur="this.style.borderColor='#e5e7eb'">
+    <div id="codeError" style="font-size:12px;color:#ef4444;height:20px;line-height:20px;"></div>
+    <button class="pay-modal-btn pay-modal-confirm" onclick="submitCode()">确认解锁</button>
+    <button class="pay-modal-btn pay-modal-cancel" onclick="closePay()">去购买解锁码</button>
+    <div style="margin-top:12px;font-size:11px;color:#d1d5db;">淘宝/闲鱼搜索「恋爱人格图鉴」购买</div>
+  </div>
+</div>
+
+<script>
+// ===== Radar Chart =====
+function drawRadar(canvasId, scoresObj, themeColor) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 280, H = 280, cx = W/2, cy = H/2, R = 72;
+  canvas.width = W * 2; canvas.height = H * 2;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  ctx.scale(2, 2);
+
+  const labels = ['治愈·小太阳值','冒险·心动制造力','理智·清醒浓度','浪漫·粉红泡泡','守护·铠甲厚度','灵魂·第六感'];
+  const keys = ['healing','adventure','rational','romantic','guardian','soulmate'];
+  const maxS = Math.max(...Object.values(scoresObj), 1);
+  const vals = keys.map(k => (scoresObj[k]||0)/maxS);
+  const n = 6;
+
+  // grid
+  for (let ring = 1; ring <= 3; ring++) {
+    const r = R * ring / 3;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = Math.PI*2*i/n - Math.PI/2;
+      const x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  // axes
+  for (let i = 0; i < n; i++) {
+    const a = Math.PI*2*i/n - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R*Math.cos(a), cy + R*Math.sin(a));
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.stroke();
+  }
+  // data shape
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const a = Math.PI*2*idx/n - Math.PI/2;
+    const v = 0.2 + vals[idx]*0.8;
+    const x = cx + R*v*Math.cos(a), y = cy + R*v*Math.sin(a);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // dots + labels
+  for (let i = 0; i < n; i++) {
+    const a = Math.PI*2*i/n - Math.PI/2;
+    const v = 0.2 + vals[i]*0.8;
+    const x = cx + R*v*Math.cos(a), y = cy + R*v*Math.sin(a);
+    ctx.beginPath();
+    ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    const lx = cx + (R+32)*Math.cos(a), ly = cy + (R+32)*Math.sin(a);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.font = '600 10px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labels[i], lx, ly);
+  }
+}
+
+// ===== Data =====
+const questions = [
+  {
+    q: "约会时，你最期待的环节是？",
+    opts: [
+      { text: "一起尝试没做过的事，比如攀岩、密室逃脱", scores: { adventure: 2 } },
+      { text: "找个舒服的地方，安静待在一起就很幸福", scores: { healing: 2 } },
+      { text: "精心策划的浪漫惊喜，烛光晚餐或手写信", scores: { romantic: 2 } },
+      { text: "深入聊聊彼此的想法，越聊越有火花", scores: { soulmate: 2 } }
+    ]
+  },
+  {
+    q: "和伴侣产生矛盾后，你通常会？",
+    opts: [
+      { text: "先冷静下来，理性分析问题出在哪里", scores: { rational: 2 } },
+      { text: "主动示好，不忍心看对方难过", scores: { healing: 2 } },
+      { text: "需要独处的空间来消化情绪和思考", scores: { soulmate: 1, rational: 1 } },
+      { text: "写一段长长的话发给对方，表达内心感受", scores: { romantic: 2 } }
+    ]
+  },
+  {
+    q: "你理想中的恋爱状态是？",
+    opts: [
+      { text: "相互独立又彼此支持，各自精彩也共同成长", scores: { rational: 2 } },
+      { text: "永远有新鲜感，一起创造刺激的回忆", scores: { adventure: 2 } },
+      { text: "稳稳的幸福，柴米油盐也觉得浪漫", scores: { guardian: 2 } },
+      { text: "灵魂深处的共鸣，一个眼神就能懂彼此", scores: { soulmate: 2 } }
+    ]
+  },
+  {
+    q: "你最看重伴侣身上的什么特质？",
+    opts: [
+      { text: "情绪稳定，无论何时都让人感到安心", scores: { guardian: 2 } },
+      { text: "有趣又充满活力，和TA在一起永远不无聊", scores: { adventure: 1, soulmate: 1 } },
+      { text: "温柔体贴，总能在细节处照顾到你", scores: { healing: 2 } },
+      { text: "有品位、懂浪漫，能把日子过成诗", scores: { romantic: 2 } }
+    ]
+  },
+  {
+    q: "收到伴侣的礼物时，你更在意什么？",
+    opts: [
+      { text: "实用又贴心，说明TA了解你的需求", scores: { rational: 1, guardian: 1 } },
+      { text: "有惊喜感和仪式感，拆礼物的瞬间最美", scores: { romantic: 2 } },
+      { text: "TA记住了你无意间说过的话，这比什么都珍贵", scores: { soulmate: 2 } },
+      { text: "只要是TA送的就很开心，礼轻情意重", scores: { healing: 2 } }
+    ]
+  },
+  {
+    q: "下面哪句话最接近你的爱情观？",
+    opts: [
+      { text: "爱情是锦上添花，先爱自己才能好好爱别人", scores: { rational: 2 } },
+      { text: "爱情是一场奇妙的冒险，就要轰轰烈烈", scores: { adventure: 2 } },
+      { text: "爱情是找到灵魂的另一半，宁缺毋滥", scores: { soulmate: 2 } },
+      { text: "爱情是相互守护的承诺，平淡中见真情", scores: { guardian: 2 } }
+    ]
+  },
+  {
+    q: "周末和伴侣在一起，你最想做什么？",
+    opts: [
+      { text: "一起宅家看电影、做顿好吃的", scores: { guardian: 1, healing: 1 } },
+      { text: "去没去过的地方探索，来一场说走就走的旅行", scores: { adventure: 2 } },
+      { text: "一起逛展、逛书店，交换彼此的想法", scores: { soulmate: 1, rational: 1 } },
+      { text: "去拍照打卡，一起记录生活中的美好瞬间", scores: { romantic: 2 } }
+    ]
+  },
+  {
+    q: "面对暧昧期，你的态度是？",
+    opts: [
+      { text: "好好享受这种心动的感觉，暧昧是最美的阶段", scores: { romantic: 2 } },
+      { text: "喜欢就直说，不喜欢拖泥带水", scores: { adventure: 1, rational: 1 } },
+      { text: "默默观察，确认对方合适了再往前走", scores: { rational: 1, guardian: 1 } },
+      { text: "不善言辞，但会用行动默默关心对方", scores: { healing: 1, guardian: 1 } }
+    ]
+  }
+];
+
+const types = {
+  healing: {
+    name: "治愈系恋人", icon: "☀️", theme: "theme-healing",
+    tags: ["温暖如光", "善解人意", "情绪港湾"],
+    traits: ["共情力MAX", "包容力强", "细腻温柔"],
+    quote: "「我的温柔，是只为你准备的避风港」",
+    desc: "你是恋爱中的一束暖阳。你天生拥有感知他人情绪的能力，总是在对方最需要的时候给予恰到好处的温暖。你的爱不张扬却无比深沉，像春风化雨般渗透到生活的每一个细节。和你在一起的人，会觉得被全世界温柔以待。",
+    bestMatch: "冒险系恋人",
+    bestMatchWhy: "你的温暖恰好能包容TA的不安分，TA的活力又能带你看更大的世界",
+    loveLanguage: "默默付出型", keyword: "让你安心",
+    strengths: ["极强的情绪感知力，总能察觉对方的情绪变化", "包容力强，能接纳伴侣的不完美", "善于营造温馨舒适的亲密氛围"],
+    blindSpots: ["容易忽视自己的需求，习惯性付出", "可能因为过度包容而失去自我边界"],
+    compatibility: { healing: 72, adventure: 92, rational: 68, romantic: 78, guardian: 85, soulmate: 74 },
+    advice: [
+      { title: "学会表达自己的需求", text: "你习惯了照顾别人，但好的爱情是双向的。试着告诉对方「我今天也需要一个拥抱」，你值得被同样温柔地对待。" },
+      { title: "建立健康的边界感", text: "包容不等于没有底线。明确什么是你可以接受的、什么不行，这不是自私，是对关系负责。" },
+      { title: "允许自己偶尔脆弱", text: "你不必永远做那个坚强的人。在对的人面前卸下盔甲，会让关系更亲密。" }
+    ]
+  },
+  adventure: {
+    name: "冒险系恋人", icon: "🔥", theme: "theme-adventure",
+    tags: ["热情似火", "自由不羁", "永远心动"],
+    traits: ["充满活力", "敢爱敢恨", "灵魂有趣"],
+    quote: "「爱情就该是一场永不散场的烟火」",
+    desc: "你的爱情像一场永不落幕的烟火。你相信爱就要轰轰烈烈，讨厌一成不变的日子。你永远是那个主动制造惊喜的人，也是关系中的「快乐源泉」。对你来说，最好的爱情是和一个人一起探索这个世界，把每一天都活成冒险故事。",
+    bestMatch: "治愈系恋人",
+    bestMatchWhy: "TA的温柔是你冒险归来的避风港，你的热情又能点燃TA平静的生活",
+    loveLanguage: "制造惊喜型", keyword: "和你在一起永远不无聊",
+    strengths: ["自带感染力，能让平淡的关系充满活力", "行动力强，想到就做，永远是惊喜制造机", "勇敢真诚，敢于表达爱意不遮掩"],
+    blindSpots: ["可能因追求新鲜感而忽略关系中需要耐心经营的部分", "热情来得快也可能退得快，需要学会在平淡中找到浪漫"],
+    compatibility: { healing: 92, adventure: 65, rational: 70, romantic: 82, guardian: 74, soulmate: 78 },
+    advice: [
+      { title: "在激情中学会沉淀", text: "激情是爱情的火花，但真正的深度来自安静相处的时刻。试着和对方一起享受一个安静的下午，你会发现不一样的甜蜜。" },
+      { title: "倾听比行动更重要", text: "你总是急于用行动表达爱，但有时候对方需要的只是你安静地听TA说。放慢脚步，学会在倾听中给予力量。" },
+      { title: "接受关系中的平淡期", text: "不是每天都要轰轰烈烈。平淡不是感情变淡，而是你们开始有了安全感的信号。" }
+    ]
+  },
+  rational: {
+    name: "理智系恋人", icon: "💎", theme: "theme-rational",
+    tags: ["清醒独立", "边界分明", "高质量陪伴"],
+    traits: ["理性思考", "自我完整", "成熟稳重"],
+    quote: "「最好的爱情，是两个完整的人相互成就」",
+    desc: "你是恋爱中最清醒的存在。你深知好的爱情不是失去自我，而是两个完整的人相互成就。你不会因为恋爱就放弃自己的生活和追求，也不会用情绪绑架来维系关系。你提供的是高质量的陪伴和深思熟虑的爱，虽然不轰烈，但每一分都真实而可靠。",
+    bestMatch: "浪漫系恋人",
+    bestMatchWhy: "TA的浪漫能融化你理性的外壳，你的稳重又能让TA的感性有处安放",
+    loveLanguage: "高质量陪伴型", keyword: "和你在一起有安全感",
+    strengths: ["情绪稳定，是关系中的「定海神针」", "善于沟通解决问题，不会让矛盾积压", "尊重彼此独立空间，关系健康有活力"],
+    blindSpots: ["有时过于理性，对方会觉得你「不够热情」或「太冷静」", "可能在对方需要感性回应时，给出理性分析"],
+    compatibility: { healing: 68, adventure: 70, rational: 60, romantic: 90, guardian: 75, soulmate: 82 },
+    advice: [
+      { title: "偶尔让感性带路", text: "不是所有事情都需要分析利弊。下次想说「我爱你」的时候，别在心里列pros和cons了，直接说出来。" },
+      { title: "主动制造亲密时刻", text: "你的爱藏在细节里但不够外显。试着主动牵手、突然拥抱，这些小动作对对方来说意义重大。" },
+      { title: "在理解之前先共情", text: "对方倾诉烦恼时，TA可能不需要解决方案，只需要一句「我理解你」。先拥抱，再分析。" }
+    ]
+  },
+  romantic: {
+    name: "浪漫系恋人", icon: "🌙", theme: "theme-romantic",
+    tags: ["仪式感满分", "审美在线", "浪漫至上"],
+    traits: ["感性细腻", "善于表达", "氛围感大师"],
+    quote: "「和你的每一天，都值得被写进情书里」",
+    desc: "你把爱情当作一首需要用心谱写的诗。在你的世界里，每一个纪念日都值得庆祝，每一次心动都值得被记录。你善于用文字、画面和仪式来表达爱意，也期待对方能懂你这份对美好的执着。你的爱情，自带滤镜和BGM。",
+    bestMatch: "理智系恋人",
+    bestMatchWhy: "TA的理性让你的浪漫有了根基，你的感性又为TA的生活添了色彩",
+    loveLanguage: "仪式表达型", keyword: "把普通的日子过成诗",
+    strengths: ["让伴侣觉得自己是世界上最特别的人", "善于用文字和行动创造难忘的记忆", "对美和细节的追求让关系始终保鲜"],
+    blindSpots: ["可能对对方的「浪漫回应」期待过高，当期待落空容易失望", "有时过于关注形式，忽略了爱的本质是陪伴"],
+    compatibility: { healing: 78, adventure: 82, rational: 90, romantic: 62, guardian: 70, soulmate: 85 },
+    advice: [
+      { title: "降低对「完美浪漫」的执念", text: "不是每次约会都要像电影场景。对方笨拙的表达可能不够浪漫，但那份真诚比任何仪式都珍贵。" },
+      { title: "学会读懂不同的爱的语言", text: "不是每个人都擅长用语言表达爱。TA可能不会写情书，但TA记得给你买早餐——这也是爱。" },
+      { title: "把仪式感分享给对方", text: "与其等待对方制造浪漫，不如主动教TA你喜欢的方式。好的关系需要双向教育和成长。" }
+    ]
+  },
+  guardian: {
+    name: "守护系恋人", icon: "🛡️", theme: "theme-guardian",
+    tags: ["安全感担当", "忠诚可靠", "细水长流"],
+    traits: ["责任心强", "踏实稳重", "默默守护"],
+    quote: "「最长情的告白，是日复一日的陪伴」",
+    desc: "你是那种让人一想到就觉得安心的存在。你不会说太多甜言蜜语，但你的每一个行动都在无声地说「我在」。你相信爱情需要经营，愿意为一段关系付出时间和耐心。在你看来，最浪漫的事就是和一个人慢慢变老，把平凡日子过成值得回忆的篇章。",
+    bestMatch: "灵魂系恋人",
+    bestMatchWhy: "TA的深度思考让你着迷，你的踏实安稳又是TA最需要的安全感",
+    loveLanguage: "行动守护型", keyword: "无论发生什么，我都在",
+    strengths: ["极高的责任感，让伴侣感到踏实可靠", "耐心经营关系，不会因为一时的困难就放弃", "在危机时刻是最可靠的后盾"],
+    blindSpots: ["不善言辞，对方可能会觉得你「闷」或「不够浪漫」", "可能过于注重稳定而缺少惊喜感，关系容易进入舒适区"],
+    compatibility: { healing: 85, adventure: 74, rational: 75, romantic: 70, guardian: 60, soulmate: 92 },
+    advice: [
+      { title: "用语言说出你的爱", text: "你的行动已经很好了，但对方有时也需要听到「我爱你」这三个字。今天就试着说一次吧，不会丢面子的。" },
+      { title: "偶尔打破常规", text: "稳定是你的优势，但偶尔的意外也很重要。不用太大动作，一束花、一个新餐厅就够了。" },
+      { title: "不要把所有压力自己扛", text: "你习惯当保护者，但好的关系是互相依靠的。让对方也有机会照顾你，TA会因此更爱你。" }
+    ]
+  },
+  soulmate: {
+    name: "灵魂系恋人", icon: "🔮", theme: "theme-soulmate",
+    tags: ["精神共鸣", "深度连接", "灵魂知己"],
+    traits: ["内心丰富", "追求深度", "独立思考"],
+    quote: "「茫茫人海，我只为灵魂相似的你停留」",
+    desc: "你追求的不是表面的甜蜜，而是灵魂深处的震颤。你渴望一个真正懂你的人——不需要太多解释，一个眼神就够了。你在感情中有些慢热，因为你在等那个频率完全对上的人。一旦找到，你会给出最深沉、最纯粹的爱。你们的爱情，是思想的碰撞和灵魂的共舞。",
+    bestMatch: "守护系恋人",
+    bestMatchWhy: "TA的稳重给了你安全感去敞开心扉，你的深度又让TA觉得遇到了知己",
+    loveLanguage: "精神共鸣型", keyword: "你是唯一懂我的人",
+    strengths: ["能给予伴侣深层次的理解和共鸣", "关系质量极高，不流于表面", "忠诚且专一，一旦认定便全身心投入"],
+    blindSpots: ["过高的精神契合标准可能让你错过「不完美但很好」的人", "慢热特质可能让对方在初期误以为你不感兴趣"],
+    compatibility: { healing: 74, adventure: 78, rational: 82, romantic: 85, guardian: 92, soulmate: 58 },
+    advice: [
+      { title: "给彼此成长的空间", text: "灵魂伴侣不是一开始就100%契合的。允许对方有你不理解的部分，在磨合中加深连接，比寻找完美匹配更现实。" },
+      { title: "主动释放信号", text: "你的慢热让人难以靠近。在心动的时候，试着主动一点——哪怕只是多看对方一眼、多回一句消息。" },
+      { title: "用身体语言补充精神连接", text: "你擅长精神层面的沟通，但别忘了肢体接触的力量。一个拥抱、一次牵手，有时胜过千言万语。" }
+    ]
+  }
+};
+
+// ===== State =====
+let currentQ = 0;
+let scores = {};
+
+function resetScores() {
+  scores = { healing: 0, adventure: 0, rational: 0, romantic: 0, guardian: 0, soulmate: 0 };
+}
+
+// ===== Navigation =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+  currentQ = 0;
+  resetScores();
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+// ===== Quiz =====
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = ((currentQ) / total * 100);
+
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${currentQ + 1} / ${total}`;
+
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = `
+    <div class="question-num">Q${currentQ + 1}</div>
+    <div class="question-text">${q.q}</div>
+    <div class="options">
+      ${q.opts.map((opt, i) => `
+        <button class="option-btn" onclick="selectOption(${i})">${opt.text}</button>
+      `).join('')}
+    </div>
+  `;
+  // Re-trigger animation
+  container.style.animation = 'none';
+  container.offsetHeight;
+  container.style.animation = 'fadeIn 0.4s ease';
+}
+
+function selectOption(idx) {
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[idx].classList.add('selected');
+
+  const opt = questions[currentQ].opts[idx];
+  for (const [type, val] of Object.entries(opt.scores)) {
+    scores[type] += val;
+  }
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      document.getElementById('progressBar').style.width = '100%';
+      showLoading();
+    }
+  }, 300);
+}
+
+// ===== Loading =====
+function showLoading() {
+  showScreen('loadingScreen');
+  setTimeout(() => showResult(), 2200);
+}
+
+// ===== Global result state =====
+let resultType = null;
+let resultPct = 0;
+
+// ===== Result =====
+function showResult() {
+  let maxType = 'healing', maxScore = 0;
+  for (const [type, score] of Object.entries(scores)) {
+    if (score > maxScore) { maxScore = score; maxType = type; }
+  }
+  const rawPct = (maxScore / 16) * 100;
+  const percentage = Math.min(98, Math.max(75, Math.round(rawPct * 0.3 + 70)));
+  resultType = maxType;
+  resultPct = percentage;
+  const t = types[maxType];
+  const rarePct = Math.min(12, Math.max(3, Math.round(100 - percentage + Math.random() * 5)));
+
+  // Build color for compatibility bars
+  const compatColors = {
+    healing: '#f59e0b', adventure: '#ef4444', rational: '#3b82f6',
+    romantic: '#a855f7', guardian: '#10b981', soulmate: '#6366f1'
+  };
+
+  const resultHTML = `
+    <!-- ===== SHARE CARD (screenshot-optimized) ===== -->
+    <div class="share-card ${t.theme}" id="shareCard">
+      <div class="share-card-inner">
+        <div class="share-rank">全网仅 ${rarePct}% 同款恋人 · 稀有人格</div>
+        <div class="share-pct">${percentage}<span class="share-pct-sign">%</span></div>
+        <div class="share-type-icon">${t.icon}</div>
+        <div class="share-type-name">${t.name}</div>
+        <div class="share-quote">${t.quote}</div>
+        <div class="share-tags">
+          ${t.tags.map(tag => `<span class="share-tag">${tag}</span>`).join('')}
+          ${t.traits.map(tag => `<span class="share-tag">${tag}</span>`).join('')}
+        </div>
+        <div class="radar-wrap"><canvas id="radarCanvas"></canvas></div>
+        <div class="share-footer">
+          <div class="share-footer-brand">恋爱人格图鉴<br><span style="font-size:10px;opacity:0.7">扫码测测你的恋爱人格</span></div>
+          <div class="share-footer-qr">扫码<br>测试</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share CTA -->
+    <div class="share-cta">
+      <div class="share-cta-text">截图分享到朋友圈，看看好友是什么恋爱人格</div>
+      <div class="share-cta-btns">
+        <button class="btn-retest" onclick="startQuiz()">重新测试</button>
+        <button class="btn-save" onclick="shareResult()">保存分享</button>
+      </div>
+    </div>
+
+    <!-- ===== FREE BRIEF ===== -->
+    <div class="brief-section">
+      <div class="brief-card">
+        <div class="brief-card-title">✨ 人格解读</div>
+        <p>${t.desc}</p>
+      </div>
+      <div class="brief-card">
+        <div class="brief-card-title">💘 恋爱档案</div>
+        <div class="brief-row">
+          <span class="be">💬</span><span class="bl">爱情语言</span><span class="bv">${t.loveLanguage}</span>
+        </div>
+        <div class="brief-row">
+          <span class="be">🔑</span><span class="bl">关键词</span><span class="bv">${t.keyword}</span>
+        </div>
+        <div class="brief-row">
+          <span class="be">💕</span><span class="bl">最佳CP</span><span class="bv">${t.bestMatch}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAID SECTION ===== -->
+    <div class="paid-section" id="paidSection">
+      <div class="paid-header">
+        <h3>深度恋爱报告</h3>
+        <p>解锁专属于你的完整恋爱分析与建议</p>
+      </div>
+
+      <!-- Preview: strengths (partially visible) -->
+      <div class="locked-card is-locked">
+        <div class="brief-card-title">💪 恋爱优势</div>
+        <div class="locked-content">
+          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[0]}</span></div>
+          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[1]}</span></div>
+          <div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${t.strengths[2]}</span></div>
+        </div>
+        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
+      </div>
+
+      <!-- Preview: blind spots -->
+      <div class="locked-card is-locked">
+        <div class="brief-card-title">⚠️ 恋爱盲区</div>
+        <div class="locked-content">
+          <div class="report-item"><span class="report-item-icon">💡</span><span class="report-item-text">${t.blindSpots[0]}</span></div>
+          <div class="report-item"><span class="report-item-icon">💡</span><span class="report-item-text">${t.blindSpots[1]}</span></div>
+        </div>
+        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
+      </div>
+
+      <!-- Preview: compatibility -->
+      <div class="locked-card is-locked">
+        <div class="brief-card-title">🔗 全类型匹配度</div>
+        <div class="locked-content">
+          ${Object.entries(types).map(([k, v]) => `
+            <div class="compat-row">
+              <span class="compat-name">${v.icon} ${v.name.replace('恋人','')}</span>
+              <div class="compat-bar-bg"><div class="compat-bar" style="width:0%;background:${compatColors[k]}"></div></div>
+              <span class="compat-pct" style="color:${compatColors[k]}">??%</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="lock-overlay"><span class="lock-badge">🔒 付费解锁</span></div>
+      </div>
+
+      <!-- Unlock CTA -->
+      <div class="unlock-cta" id="unlockCta">
+        <div class="unlock-limited">限时特惠</div>
+        <div class="unlock-price-row">
+          <span class="unlock-price">¥1.99</span>
+          <span class="unlock-price-orig">¥9.90</span>
+        </div>
+        <div class="unlock-list">
+          <div class="unlock-list-item">恋爱优势深度解析</div>
+          <div class="unlock-list-item">恋爱盲区预警</div>
+          <div class="unlock-list-item">与6种人格的匹配度</div>
+          <div class="unlock-list-item">3条专属恋爱建议</div>
+          <div class="unlock-list-item">沟通风格指南</div>
+        </div>
+        <button class="unlock-btn" onclick="openPay()">输入解锁码 · 查看完整报告</button>
+        <div class="unlock-count">已有 12,386 人解锁</div>
+      </div>
+    </div>
+
+    <!-- ===== UNLOCKED REPORT (hidden by default) ===== -->
+    <div class="report-unlocked" id="reportUnlocked">
+      <div class="report-card" style="animation-delay:0.1s">
+        <div class="report-card-title">💪 恋爱优势</div>
+        ${t.strengths.map(s => `<div class="report-item"><span class="report-item-icon">✅</span><span class="report-item-text">${s}</span></div>`).join('')}
+      </div>
+      <div class="report-card" style="animation-delay:0.2s">
+        <div class="report-card-title">⚠️ 恋爱盲区</div>
+        ${t.blindSpots.map(s => `<div class="report-item"><span class="report-item-icon">💡</span><span class="report-item-text">${s}</span></div>`).join('')}
+      </div>
+      <div class="report-card" style="animation-delay:0.3s">
+        <div class="report-card-title">🔗 全类型匹配度</div>
+        ${Object.entries(types).map(([k, v]) => `
+          <div class="compat-row">
+            <span class="compat-name">${v.icon} ${v.name.replace('恋人','')}</span>
+            <div class="compat-bar-bg"><div class="compat-bar compat-anim" data-w="${t.compatibility[k]}" style="width:0%;background:${compatColors[k]}"></div></div>
+            <span class="compat-pct" style="color:${compatColors[k]}">${t.compatibility[k]}%</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="report-card" style="animation-delay:0.4s">
+        <div class="report-card-title">💌 专属恋爱建议</div>
+        ${t.advice.map(a => `
+          <div class="advice-box">
+            <div class="advice-box-title">${a.title}</div>
+            <div class="advice-box-text">${a.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('resultScreen').innerHTML = resultHTML;
+  showScreen('resultScreen');
+  // Draw radar after DOM insert
+  setTimeout(() => drawRadar('radarCanvas', scores), 100);
+}
+
+// ===== Share =====
+function shareResult() {
+  showToast('长按截图即可分享给好友');
+}
+
+// ===== Unlock Code System =====
+// Code format: LV + 6 digits, valid when (d1*7 + d2*3 + d3*5 + d4*2 + d5*8 + d6*4) % 10 === 7
+function validateCode(code) {
+  if (!/^LV\d{6}$/.test(code)) return false;
+  const ds = code.slice(2).split('').map(Number);
+  const weights = [7, 3, 5, 2, 8, 4];
+  const sum = ds.reduce((s, d, i) => s + d * weights[i], 0);
+  return sum % 10 === 7;
+}
+
+function openPay() {
+  document.getElementById('codeInput').value = '';
+  document.getElementById('codeError').textContent = '';
+  document.getElementById('payModal').classList.add('show');
+  setTimeout(() => document.getElementById('codeInput').focus(), 300);
+}
+function closePay() {
+  document.getElementById('payModal').classList.remove('show');
+}
+function submitCode() {
+  const code = document.getElementById('codeInput').value.trim().toUpperCase();
+  if (!code) {
+    document.getElementById('codeError').textContent = '请输入解锁码';
+    return;
+  }
+  if (!validateCode(code)) {
+    document.getElementById('codeError').textContent = '解锁码无效，请检查后重试';
+    document.getElementById('codeInput').style.borderColor = '#ef4444';
+    setTimeout(() => { document.getElementById('codeInput').style.borderColor = '#e5e7eb'; }, 1500);
+    return;
+  }
+  // Check if code already used (localStorage)
+  const usedCodes = JSON.parse(localStorage.getItem('lv_used_codes') || '[]');
+  if (usedCodes.includes(code)) {
+    document.getElementById('codeError').textContent = '该解锁码已被使用';
+    return;
+  }
+  // Mark as used
+  usedCodes.push(code);
+  localStorage.setItem('lv_used_codes', JSON.stringify(usedCodes));
+
+  closePay();
+  showToast('解锁成功！');
+  unlockReport();
+}
+
+function unlockReport() {
+  document.getElementById('paidSection').style.display = 'none';
+  const report = document.getElementById('reportUnlocked');
+  report.classList.add('show');
+  setTimeout(() => {
+    report.querySelectorAll('.compat-anim').forEach(bar => {
+      bar.style.width = bar.dataset.w + '%';
+    });
+  }, 300);
+  setTimeout(() => {
+    report.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 200);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
